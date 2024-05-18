@@ -1,11 +1,17 @@
 const express = require("express");
-const urlRouter = require("./routes/router");
+const path = require("path");
 const { connecttoMongoDB } = require("./connect");
 const URL = require("./models/url");
+const urlRouter = require("./routes/router");
+const staticRouter = require("./routes/staticRouter"); 
 const app = express();
-const PORT = 3000; // Change the port number to a different one, e.g., 3000
+const PORT = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
 
 connecttoMongoDB("mongodb://localhost:27017/short-url")
   .then(() => {
@@ -15,18 +21,27 @@ connecttoMongoDB("mongodb://localhost:27017/short-url")
     console.error("MongoDB Connection Error: ", err);
   });
 
-app.use("/url", urlRouter); // Using the router for "/url" routes
+app.use("/static", staticRouter); 
+app.use("/url", urlRouter);
+
+app.get('/test', async (req, res) => {
+  try {
+    const allUrls = await URL.find({});
+    return res.render("home", {
+      urls: allUrls,
+    });
+  } catch (error) {
+    console.error("Error fetching URLs: ", error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Handle analytics route before short URL redirect route
-
-
 app.get("/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
   try {
     const entry = await URL.findOneAndUpdate(
-      {
-        shortId,
-      },
+      { shortId },
       {
         $push: {
           visitHistory: {
@@ -47,6 +62,3 @@ app.get("/:shortId", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
-
-
-

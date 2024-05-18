@@ -18,7 +18,11 @@ async function handleGenerateNewShortURL(req, res) {
       visitHistory: [],
     });
 
-    return res.json({ id: shortId });
+    const allUrls = await URL.find({});
+    return res.render("home", {
+      id: shortId,
+      urls: allUrls
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
