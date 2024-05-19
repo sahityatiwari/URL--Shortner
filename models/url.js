@@ -1,28 +1,27 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const urlSchema = new mongoose.Schema({
   shortId: {
     type: String,
     required: true,
-    unique: true, // Corrected capitalization
+    unique: true
   },
   redirectURL: {
     type: String,
-    required: true,
+    required: true
   },
-  visitHistory: [{
-    ip: {
-      type: String,
-      required: true,
-    },
-    timestamp: {
-      type: Date,
-      default: Date.now,
-    },
-  }],
+  visitHistory: [
+    {
+      timestamp: {
+        type: Date,
+        required: true
+      }
+    }
+  ]
 }, {
-  timestamps: true,
+  timestamps: true
 });
 
-const URL = mongoose.model("URL", urlSchema); // Changed model name to "URL"
+const URL = mongoose.model('URL', urlSchema);
+
 module.exports = URL;

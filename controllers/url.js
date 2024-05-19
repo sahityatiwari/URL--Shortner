@@ -19,9 +19,11 @@ async function handleGenerateNewShortURL(req, res) {
     });
 
     const allUrls = await URL.find({});
+    const hasUrls = allUrls.length > 0;
     return res.render("home", {
       id: shortId,
-      urls: allUrls
+      urls: allUrls,
+      hasUrls: hasUrls
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });

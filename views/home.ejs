@@ -113,6 +113,23 @@
         a:hover {
             color: #0056b3;
         }
+
+        .delete-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .delete-button:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -124,13 +141,7 @@
         <div>
             <form method="POST" action="/url">
                 <label for="url">Enter your Original URL</label>
-                <input
-                    type="text"
-                    name="url"
-                    id="url"
-                    placeholder="https://www.example.com/"
-                    required
-                />
+                <input type="text" name="url" id="url" placeholder="https://www.example.com/" required />
                 <button type="submit">Generate</button>
             </form>
         </div>
@@ -158,6 +169,11 @@
             </table>
             <% } %>
         </div>
+        <% if (hasUrls) { %>
+        <form method="POST" action="/url/delete-all">
+            <button type="submit" class="delete-button">Erase All Data</button>
+        </form>
+        <% } %>
     </div>
 </body>
 </html>
